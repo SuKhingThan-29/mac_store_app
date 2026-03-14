@@ -1,0 +1,250 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:marketmate_app/controllers/auth_controller.dart';
+import 'package:marketmate_app/views/presentation/authentication_screen/register_screen.dart';
+
+class LoginScreen extends ConsumerStatefulWidget {
+  @override
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  final GlobalKey<FormState> _globalKey = GlobalKey<FormState>();
+  late String email;
+  late String password;
+  bool isLoading = false;
+  final AuthController _authController = AuthController();
+  loginUser() async {
+    setState(() {
+      isLoading = true;
+    });
+    await _authController
+        .signInUsers(context: context, email: email, password: password,ref: ref)
+        .whenComplete(() {
+      // _globalKey.currentState!.reset();
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: Colors.white.withOpacity(0.95),
+        body: Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Form(
+                key: _globalKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "login your account",
+                      style: GoogleFonts.getFont('Lato',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 23,
+                          letterSpacing: 0.2),
+                    ),
+                    Text(
+                      "To explore the world exclusive",
+                      style: GoogleFonts.getFont('Lato',
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          letterSpacing: 0.2),
+                    ),
+                    Image.asset(
+                      'assets/images/Illustration.png',
+                      width: 200,
+                      height: 200,
+                    ),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Email',
+                        style: GoogleFonts.getFont('Nunito Sans',
+                            fontWeight: FontWeight.w600, letterSpacing: 0.2),
+                      ),
+                    ),
+                    TextFormField(
+                      onChanged: (value) {
+                        email = value;
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'your email is empty';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(9),
+                          ),
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          labelText: 'Enter your email',
+                          labelStyle: GoogleFonts.getFont('Nunito Sans',
+                              fontSize: 14, letterSpacing: 0.1),
+                          prefixIcon: Image.asset(
+                            'assets/icons/email.png',
+                            width: 20,
+                            height: 20,
+                          )),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      onChanged: (value) {
+                        password = value;
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'password is empty';
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                          fillColor: Colors.white,
+                          filled: true,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(9),
+                          ),
+                          focusedBorder: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          labelText: 'Enter your password',
+                          labelStyle: GoogleFonts.getFont('Nunito Sans',
+                              fontSize: 14, letterSpacing: 0.1),
+                          prefixIcon: Image.asset(
+                            'assets/icons/password.png',
+                            width: 20,
+                            height: 20,
+                          ),
+                          suffixIcon: Icon(Icons.visibility)),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        if (_globalKey.currentState!.validate()) {
+                          loginUser();
+                        } else {
+                          print("fail");
+                        }
+                      },
+                      child: Container(
+                        width: 319,
+                        height: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF102DE1), Color(0xCC0D6EFF)],
+                          ),
+                        ),
+                        child: Center(
+                            child: Stack(children: [
+                          Positioned(
+                              left: 278,
+                              top: 19,
+                              child: Opacity(
+                                opacity: 0.5,
+                                child: Container(
+                                  width: 60,
+                                  height: 60,
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(
+                                        width: 12,
+                                        color: Color(0xFF103DE5),
+                                      ),
+                                      borderRadius: BorderRadius.circular(30)),
+                                ),
+                              )),
+                          Positioned(
+                            left: 311,
+                            top: 36,
+                            child: Opacity(
+                              opacity: 0.3,
+                              child: Container(
+                                width: 5,
+                                height: 5,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(3)),
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            left: 281,
+                            top: -10,
+                            child: Opacity(
+                              opacity: 0.3,
+                              child: Container(
+                                width: 20,
+                                height: 20,
+                                clipBehavior: Clip.antiAlias,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                            ),
+                          ),
+                          Center(
+                            child: isLoading
+                                ? const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  )
+                                : Text(
+                                    'Sign in',
+                                    style: GoogleFonts.getFont('Lato',
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                          )
+                        ])),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Need an Account?',
+                          style: GoogleFonts.roboto(
+                              fontWeight: FontWeight.bold, letterSpacing: 1),
+                        ),
+                        InkWell(
+                            onTap: () {
+                              Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return RegisterScreen();
+                              }));
+                            },
+                            child: Text(
+                              'Sign up',
+                              style: GoogleFonts.roboto(
+                                  color: Color(0xFF103DE5),
+                                  fontWeight: FontWeight.bold),
+                            ))
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ));
+  }
+}
