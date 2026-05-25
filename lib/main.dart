@@ -3,11 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:marketmate_app/controllers/auth_controller.dart';
-import 'package:marketmate_app/global_variables.dart';
 import 'package:marketmate_app/provider/user_provider.dart';
 import 'package:marketmate_app/views/presentation/authentication_screen/login_screen.dart';
 import 'package:marketmate_app/views/presentation/main_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,9 +19,9 @@ void main() async {
 //Root widget of the application, a consumer widget to consume state change
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
+
   Future<void> _checkTokenAndSetUser(WidgetRef ref, context) async {
     await AuthController().getUserData(context, ref);
-    ref.watch(userProvider);
   }
 
   @override

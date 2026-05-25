@@ -71,7 +71,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     TextFormField(
                       onChanged: (value) {
-                        email = value;
+                        email = 'sukhingthan91@gmail.com';
                       },
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -102,7 +102,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     TextFormField(
                       onChanged: (value) {
-                        password = value;
+                        password = 'sukhing123';
                       },
                       validator: (value) {
                         if (value!.isEmpty) {
